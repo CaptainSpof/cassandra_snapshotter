@@ -540,7 +540,7 @@ class BackupWorker(object):
             auth = "-u {!s} -p {!s}".format(self.cqlsh_user, self.cqlsh_password)
         else:
             auth = ""
-        clear_command = '%(nodetool)s "%(auth)s" clearsnapshot -t "%(snapshot)s"'
+        clear_command = '%(nodetool)s %(auth)s clearsnapshot -t "%(snapshot)s"'
         cmd = clear_command % dict(
             nodetool=self.nodetool_path,
             auth=auth,
