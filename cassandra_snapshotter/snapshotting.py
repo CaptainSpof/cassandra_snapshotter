@@ -537,7 +537,7 @@ class BackupWorker(object):
     def clear_node_snapshot(self, snapshot):
         """Cleans up snapshots from a cassandra node"""
         if self.cqlsh_user and self.cqlsh_password:
-            auth = "-u {!s} -p {!s}".format(self.cqlsh_user, self.cqlsh_password)
+            auth = "-u {!s} -pw {!s}".format(self.cqlsh_user, self.cqlsh_password)
         else:
             auth = ""
         clear_command = '%(nodetool)s %(auth)s clearsnapshot -t "%(snapshot)s"'
