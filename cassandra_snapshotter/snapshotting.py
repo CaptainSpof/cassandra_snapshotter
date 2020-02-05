@@ -541,7 +541,6 @@ class BackupWorker(object):
         else:
             auth = ""
         clear_command = '%(nodetool)s "%(auth)s" clearsnapshot -t "%(snapshot)s"'
-        clear_command = '%(nodetool)s "%(auth)s" clearsnapshot -t "%(snapshot)s"'
         cmd = clear_command % dict(
             nodetool=self.nodetool_path,
             auth=auth,
