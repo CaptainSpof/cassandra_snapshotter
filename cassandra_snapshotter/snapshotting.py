@@ -407,7 +407,7 @@ class BackupWorker(object):
         with settings(host_string=env.hosts[0]):
             with hide('output'):
                 if self.cqlsh_user and self.cqlsh_password:
-                    auth = "-u {!s} -p {!s}".format(self.cqlsh_user, self.cqlsh_password)
+                    auth = "-u {!s} -pw {!s}".format(self.cqlsh_user, self.cqlsh_password)
                 else:
                     auth = ""
                 cmd = "{!s} {!s} ring".format(self.nodetool_path, auth)
