@@ -406,10 +406,17 @@ class BackupWorker(object):
     def get_ring_description(self):
         with settings(host_string=env.hosts[0]):
             with hide('output'):
-                if self.use_sudo:
-                    ring_description = sudo(self.nodetool_path + ' ring')
+                if self.cqlsh_user and self.cqlsh_password:
+                    auth = "-u {!s} -p {!s}".format(self.cqlsh_user, self.cqlsh_password)
                 else:
-                    ring_description = run(self.nodetool_path + ' ring')
+                    auth = ""
+                if self.use_sudo:
+
+                    cmd = "{!s} {!s} ring".format(
+                    self.nodetool_path, auth)
+                    ring_description = sudo(cmd)
+                else:
+                    ring_description = run(cmd)
         return ring_description
 
     def get_keyspace_schema(self, keyspace=None):
