@@ -410,10 +410,8 @@ class BackupWorker(object):
                     auth = "-u {!s} -p {!s}".format(self.cqlsh_user, self.cqlsh_password)
                 else:
                     auth = ""
+                cmd = "{!s} {!s} ring".format(self.nodetool_path, auth)
                 if self.use_sudo:
-
-                    cmd = "{!s} {!s} ring".format(
-                    self.nodetool_path, auth)
                     ring_description = sudo(cmd)
                 else:
                     ring_description = run(cmd)
