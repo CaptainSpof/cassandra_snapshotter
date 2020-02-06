@@ -479,14 +479,21 @@ class BackupWorker(object):
                 else:
                     run(cmd)
 
+
+        if self.cqlsh_user and self.cqlsh_password:
+            auth = "-u {!s} -pw {!s}".format(self.cqlsh_user, self.cqlsh_password)
+        else:
+            auth = ""
+
         if incremental_backups:
-            backup_command = "%(nodetool)s flush %(keyspace)s %(tables)s"
+            backup_command = "%(nodetool)s %(auth)s flush %(keyspace)s %(tables)s"
 
             if snapshot.keyspaces:
                 # flush can only take one keyspace at a time.
                 for keyspace in snapshot.keyspaces:
                     cmd = backup_command % dict(
                         nodetool=self.nodetool_path,
+                        auth=auth,
                         keyspace=keyspace,
                         tables=snapshot.table or ''
                     )
@@ -495,13 +502,14 @@ class BackupWorker(object):
                 # If no keyspace then can't provide a table either.
                 cmd = backup_command % dict(
                     nodetool=self.nodetool_path,
+                    auth=auth,
                     keyspace='',
                     tables=''
                 )
                 run_cmd(cmd)
 
         else:
-            backup_command = "%(nodetool)s snapshot %(table_param)s \
+            backup_command = "%(nodetool)s %(auth)s snapshot %(table_param)s \
                 -t %(snapshot)s %(keyspaces)s"
 
             if snapshot.table:
@@ -510,6 +518,7 @@ class BackupWorker(object):
                 for keyspace in snapshot.keyspaces:
                     cmd = backup_command % dict(
                         nodetool=self.nodetool_path,
+                        auth=auth,
                         table_param=table_param,
                         snapshot=snapshot.name,
                         keyspaces=keyspace
@@ -518,6 +527,7 @@ class BackupWorker(object):
             else:
                 cmd = backup_command % dict(
                     nodetool=self.nodetool_path,
+                    auth=auth,
                     table_param='',
                     snapshot=snapshot.name,
                     keyspaces=' '.join(snapshot.keyspaces or '')
